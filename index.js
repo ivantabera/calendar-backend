@@ -12,6 +12,9 @@ const app = express();
 // Mostrar index del directorio publico 
 app.use( express.static('public'));
 
+// Lectura y parseo del body
+app.use( express.json() );
+
 // Rutas
 // TODO auth / crear, login, renewToken
 app.use( '/api/auth', require('./routes/auth') );
