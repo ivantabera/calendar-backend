@@ -1,17 +1,23 @@
 const { response } = require('express');
+const { validationResult } = require('express-validator');
 
 const crearUsuario = ( req, res = response ) => {
 
     const {name, email, password} = req.body ;
 
-    if ( name.length < 5 ) {
-        return  res.status(400).json({
-                    ok:'false',
-                    msg:'El nombre debe tener mas de 5 letras'
-                })
+    // Ejecutamos la solicitud con el validationResult y la guardamos en una constante
+    const errors = validationResult(req);
+
+    // Validamos el resultado y si algo sale mal enviamos retornamos una respuesta 400
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            ok:false,
+            errors:errors.mapped()
+        })
     }
 
-    res.json({
+    // Si todo esta bien respondemos con un status 201
+    res.status(201).json({
         ok:true,
         msg:'nuevo usuario',
         name:name,
@@ -24,7 +30,16 @@ const loginUsuario = ( req, res = response ) => {
 
     const { email, password} = req.body ;
 
-    res.json({
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            ok:false,
+            errors:errors.mapped()
+        })
+    }
+
+    res.status(201).json({
         ok:true,
         msg:'login usuario',
         email:email,
