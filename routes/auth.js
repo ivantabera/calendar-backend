@@ -5,9 +5,10 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
-const router = Router();
-
 const { crearUsuario, loginUsuario, revalidarToken } = require('../controllers/auth');
+const { validarCampos } = require('../middlewares/validar-campos');
+
+const router = Router();
 
 /* Endpoints */
 //Rutas post
@@ -16,7 +17,8 @@ router.post(
     [//middlewares
         check('name','El nombre es obligatorio').not().isEmpty(),
         check('email','El email es incorrecto').isEmail(),
-        check('password','El password debe ser igual o mayor a 5 caracteres').isLength({min:5})
+        check('password','El password debe ser igual o mayor a 5 caracteres').isLength({min:5}),
+        validarCampos
     ],
     crearUsuario 
 );
@@ -25,7 +27,8 @@ router.post(
     '/',
     [//middlewares
         check('email','El email es incorrecto').isEmail(),
-        check('password','El password debe ser igual o mayor a 5 caracteres').isLength({min:5})
+        check('password','El password debe ser igual o mayor a 5 caracteres').isLength({min:5}),
+        validarCampos
     ],
     loginUsuario
 );
