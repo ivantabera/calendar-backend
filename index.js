@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+const { dbConnection } = require('./database/config');
 
 /* La siguiente consola es para buscar la propiedad PORT y se pueda trabajar sobre el puerto que nos manden */
 // console.log(process.env);
@@ -8,6 +9,9 @@ const port = process.env.PORT
 
 //Crear el servidor de express
 const app = express();
+
+// Configuracion BD
+dbConnection();
 
 // Mostrar index del directorio publico 
 app.use( express.static('public'));
