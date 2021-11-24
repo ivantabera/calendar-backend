@@ -1,17 +1,33 @@
 const { response } = require('express');
+const Usuario = require('../models/Usuario');
 
-const crearUsuario = ( req, res = response ) => {
 
-    const {name, email, password} = req.body ;
+const crearUsuario = async( req, res = response ) => {
 
-    // Si todo esta bien respondemos con un status 201
-    res.status(201).json({
-        ok:true,
-        msg:'nuevo usuario',
-        name:name,
-        email:email,
-        password:password
-    });
+    // const {name, email, password} = req.body ;
+
+    try {
+
+        const nuevoUsuario = new Usuario( req.body );
+
+        await nuevoUsuario.save();
+
+        // Si todo esta bien respondemos con un status 201
+        res.status(201).json({
+            ok:true,
+            msg:'nuevo usuario'
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            ok:false,
+            msg:'Error de registro, hable con el administrador'
+        })
+        
+    }
+
+    
 };
 
 const loginUsuario = ( req, res = response ) => {
