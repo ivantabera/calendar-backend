@@ -30,6 +30,8 @@ const crearUsuario = async( req, res = response ) => {
         // Grabar en bd al usuario
         await usuario.save();
 
+        // Generar JWT
+
         // Si todo esta bien respondemos con un status 201
         res.status(201).json({
             ok:true,
@@ -74,6 +76,8 @@ const loginUsuario = async( req, res = response ) => {
                 msg:'El password es invalido'
             })
         }
+
+        //Generar el token
 
         // Respuesta si el password es correcto
         res.json({
