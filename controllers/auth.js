@@ -4,18 +4,29 @@ const Usuario = require('../models/Usuario');
 
 const crearUsuario = async( req, res = response ) => {
 
-    // const {name, email, password} = req.body ;
+    const { email, password } = req.body ;
 
     try {
 
-        const nuevoUsuario = new Usuario( req.body );
+        let usuario = await Usuario.findOne({ email });
+        console.log('usuario', usuario);
 
-        await nuevoUsuario.save();
+        if (usuario) {
+            return res.status(400).json({
+                ok:false,
+                msg:'El correo electronico ya existe'
+            })
+        }
+
+        usuario = new Usuario( req.body );
+
+        await usuario.save();
 
         // Si todo esta bien respondemos con un status 201
         res.status(201).json({
             ok:true,
-            msg:'nuevo usuario'
+            uid:usuario._id,
+            name:usuario.name
         });
 
     } catch (error) {
@@ -24,7 +35,7 @@ const crearUsuario = async( req, res = response ) => {
             ok:false,
             msg:'Error de registro, hable con el administrador'
         })
-        
+
     }
 
     
