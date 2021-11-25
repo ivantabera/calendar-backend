@@ -9,6 +9,7 @@ const crearUsuario = async( req, res = response ) => {
 
     try {
 
+        // Buscar usuario en la bd
         let usuario = await Usuario.findOne({ email });
         console.log('usuario', usuario);
 
@@ -19,6 +20,7 @@ const crearUsuario = async( req, res = response ) => {
             })
         }
 
+        // planchar informacion de la respuesta para el usuario
         usuario = new Usuario( req.body );
 
         // Encriptar la contraseña
@@ -36,7 +38,7 @@ const crearUsuario = async( req, res = response ) => {
         });
 
     } catch (error) {
-
+        console.log('error', error)
         res.status(500).json({
             ok:false,
             msg:'Error de registro, hable con el administrador'
@@ -53,6 +55,7 @@ const loginUsuario = async( req, res = response ) => {
 
     try {
         
+        // Buscar usuario en la bd
         let usuario = await Usuario.findOne({ email });
 
         if (!usuario) {
@@ -62,6 +65,7 @@ const loginUsuario = async( req, res = response ) => {
             })
         }
 
+        // Validar password
         const validPassword = bcrypt.compareSync( password, usuario.password );
 
         if (!validPassword) {
@@ -71,6 +75,7 @@ const loginUsuario = async( req, res = response ) => {
             })
         }
 
+        // Respuesta si el password es correcto
         res.json({
             ok:true,
             uid:usuario._id,
@@ -79,6 +84,10 @@ const loginUsuario = async( req, res = response ) => {
 
     } catch (error) {
         console.log('error', error)
+        res.status(500).json({
+            ok:false,
+            msg:'Error de registro, hable con el administrador'
+        })
     }
 
 };
