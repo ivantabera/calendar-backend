@@ -1,5 +1,6 @@
 const express = require('express');
 require('dotenv').config();
+var cors = require('cors')
 const { dbConnection } = require('./database/config');
 
 /* La siguiente consola es para buscar la propiedad PORT y se pueda trabajar sobre el puerto que nos manden */
@@ -12,6 +13,9 @@ const app = express();
 
 // Configuracion BD
 dbConnection();
+
+//CORS
+app.use(cors());
 
 // Mostrar index del directorio publico 
 app.use( express.static('public'));
