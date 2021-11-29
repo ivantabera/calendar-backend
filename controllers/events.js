@@ -10,6 +10,8 @@ const getEventos = ( req, res = response ) =>{
 };
 
 const createEvento = ( req, res = response ) => {
+    
+    console.log('req', req.body);
 
     res.json({
         ok:true,
