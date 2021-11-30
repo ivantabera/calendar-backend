@@ -1,4 +1,5 @@
 const { response } = require('express');
+const Evento = require('../models/Eventos');
 
 const getEventos = ( req, res = response ) =>{
 
@@ -10,13 +11,30 @@ const getEventos = ( req, res = response ) =>{
 };
 
 const createEvento = ( req, res = response ) => {
+    console.log('res', res)
     
-    console.log('req', req.body);
+    const evento = new Evento( req.body );
 
-    res.json({
-        ok:true,
-        msg:'Se creo el evento satisfactoriamente'
-    });
+    try {
+
+        evento.user = req.uid;
+        evento.save();
+
+        res.status(200).json({
+            ok:true,
+            msg:'Registro exitoso',
+            evento
+        });
+
+    } catch (error) {
+
+        console.log('error', error)
+        res.status(500).json({
+            ok:false,
+            msg:'Error de registro, hable con el administrador'
+        })
+
+    }
 
 };
 
