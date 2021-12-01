@@ -53,7 +53,7 @@ const updateEvento = async( req, res = response ) => {
 
         // Validar si el evento no existe
         if( !evento ) {
-            res.status(400).json({
+            return res.status(400).json({
                 ok:false,
                 msg:'Error, el evento no existe'
             })
@@ -63,7 +63,7 @@ const updateEvento = async( req, res = response ) => {
         const eventoValidacion = evento.user.toString();
         // Validar si el usuario tiene privilegios
         if( eventoValidacion !== uid ){
-            res.status(401).json({
+            return res.status(401).json({
                 ok:false,
                 msg:'Error, el usuario no tiene privilegios para realizar esta operacion'
             })
@@ -100,12 +100,56 @@ const updateEvento = async( req, res = response ) => {
 
 };
 
-const deleteEvento = ( req, res = response ) => {
+const deleteEvento = async( req, res = response ) => {
 
-    res.json({
-        ok:true,
-        msg:'Evento eliminado con éxito'
-    });
+    // Varible para extraer los parametros de la url (peticion)
+    const eventoId = req.params.id;
+    // Variable para extraer de la peticion el uid del usuario 
+    const uid = req.uid;
+
+    try {
+        
+        // Se guarda en la variable el evento buscado por id
+        const evento = await Evento.findById( eventoId );
+
+        // Validar si el evento no existe
+        if( !evento ) {
+            return res.status(400).json({
+                ok:false,
+                msg:'Error, el evento no existe'
+            })
+        }
+
+        // Extraemos en la variable con el metodo toString  que Devuelve una cadena que representa al objeto
+        const eventoValidacion = evento.user.toString();
+        // Validar si el usuario tiene privilegios
+        if( eventoValidacion !== uid ){
+            return res.status(401).json({
+                ok:false,
+                msg:'Error, el usuario no tiene privilegios para realizar esta operacion'
+            })
+        }
+
+        // Actualizamos el evento con el id del evento, el nuevo evento armado y el ultimo parametro
+        // nos sirve para actualizar de forma inmediata la respuesta del postman
+        const eventoEliminado= await Evento.findByIdAndDelete( eventoId ); 
+        
+        // Respondemos con el evento ya actualizado
+        res.json({
+            ok:true,
+            eventoEliminado
+        });
+
+    } catch (error) {
+
+        // Control del error si la peticion falla
+        console.log('error', error)
+        return res.status(500).json({
+            ok:false,
+            msg:'Error, contacta al administrador'
+        })
+        
+    }
 
 };
 
