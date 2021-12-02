@@ -12,7 +12,6 @@ const crearUsuario = async( req, res = response ) => {
 
         // Buscar usuario en la bd
         let usuario = await Usuario.findOne({ email });
-        console.log('usuario', usuario);
 
         if (usuario) {
             return res.status(400).json({
